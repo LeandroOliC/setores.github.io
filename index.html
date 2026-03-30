@@ -1,44 +1,102 @@
-<html lang="pt">
+<!DOCTYPE html>
+<html lang="pt-br">
 <head>
-    <title>Setores</title>
-    <style>
-      
-      *{
-        background-color: rgb(250,250,250);
-        font-family: Arial, Helvetica, sans-serif;
-        margin: 0px;
-      }
-      button{
-        border-radius: 2px;
-        background-color: white;
-      }
-      .home_bar{
-        background-color: rgb(44, 255, 108);
-        height: 10%;
-        border-bottom: 1px solid black;
-      }
+  <meta charset="UTF-8">
+  <title>Cadastro de Animais</title>
+</head>
+<body>
 
-    </style>
-  </head>
-  <body>
-    
-    <div class="home_bar">
-      <a href="https://leandroolic.github.io/setores.github.io/">Home</a>
-      <a href="https://leandroolic.github.io/setores.github.io/pages/sites.html">Sites</a>
-    </div>
-      
-     <form action="/processar-dados" method="POST">
+<h2>Login</h2>
+<input type="text" id="usuario" placeholder="Nome do funcionário">
+<button onclick="login()">Entrar</button>
 
-        <label for="nome">Nome:</label><br>
-        <input type="text" id="nome" name="nome" required placeholder="Digite seu nome"><br><br>
+<div id="sistema" style="display:none;">
+  <h2>Cadastro de Animais</h2>
 
-        <label for="email">E-mail:</label><br>
-        <input type="email" id="email" name="email" required placeholder="Digite seu e-mail"><br><br>
+  <label>Setor:</label>
+  <input type="text" id="setor"><br><br>
 
-        <button type="submit">Enviar</button>
-    </form>
-      
-    <script src="script.js"></script>
-      
-  </body>
-  </html>
+  <label>Tipo de Animal:</label>
+  <select id="tipo">
+    <option value="Bovino">Bovino</option>
+    <option value="Suino">Suino</option>
+    <option value="Ovino">Ovino</option>
+    <option value="Avino">Avino</option>
+  </select><br><br>
+
+  <label>Categoria:</label>
+  <select id="categoria"></select><br><br>
+
+  <label>Quantidade:</label>
+  <input type="number" id="quantidade"><br><br>
+
+  <label>Motivo:</label>
+  <input type="text" id="motivo"><br><br>
+
+  <label>Data:</label>
+  <input type="date" id="data"><br><br>
+
+  <label>Observações:</label>
+  <textarea id="obs"></textarea><br><br>
+
+  <button onclick="enviar()">Cadastrar</button>
+</div>
+
+<script>
+let usuarioLogado = "";
+
+const categorias = {
+  Bovino: ["0-12", "12-24", "Seca", "Lactação"],
+  Suino: ["Leitão", "Crescimento", "Engorda", "Matriz", "Reprodutor"],
+  Ovino: ["Dorper M", "Dorper F", "Cordeiro"],
+  Avino: ["Poedeiras", "Pintinhos"]
+};
+
+document.getElementById("tipo").addEventListener("change", atualizarCategorias);
+
+function atualizarCategorias() {
+  let tipo = document.getElementById("tipo").value;
+  let select = document.getElementById("categoria");
+  select.innerHTML = "";
+
+  categorias[tipo].forEach(c => {
+    let option = document.createElement("option");
+    option.value = c;
+    option.text = c;
+    select.appendChild(option);
+  });
+}
+
+function login() {
+  usuarioLogado = document.getElementById("usuario").value;
+  if(usuarioLogado) {
+    document.getElementById("sistema").style.display = "block";
+  }
+}
+
+function enviar() {
+  const dados = {
+    setor: document.getElementById("setor").value,
+    tipo: document.getElementById("tipo").value,
+    categoria: document.getElementById("categoria").value,
+    quantidade: document.getElementById("quantidade").value,
+    motivo: document.getElementById("motivo").value,
+    data: document.getElementById("data").value,
+    usuario: usuarioLogado,
+    obs: document.getElementById("obs").value
+  };
+
+  fetch("COLE_AQUI_URL_DO_SCRIPT", {
+    method: "POST",
+    body: JSON.stringify(dados)
+  })
+  .then(res => res.text())
+  .then(msg => alert("Salvo com sucesso"))
+  .catch(err => alert("Erro ao salvar"));
+}
+
+atualizarCategorias();
+</script>
+
+</body>
+</html>
